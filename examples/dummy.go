@@ -32,5 +32,5 @@ func (dummy Dummy) RemoveUser3(user, server, password string) bool {
 func main() {
 	external := jabberd.NewExternal(dummy)
 
-	external.start()
+	external.Start()
 }
