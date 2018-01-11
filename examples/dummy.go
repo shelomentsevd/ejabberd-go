@@ -1,11 +1,17 @@
 package main
 
-import "github.com/shelomentsevd/ejabberd-go"
+import (
+	"log"
+	"os"
+
+	"github.com/shelomentsevd/ejabberd-go"
+)
 
 type Dummy struct {
 }
 
 func (dummy Dummy) Auth(user, server, password string) bool {
+	log.Printf("Authorization user: %s, server: %s, passwd: %s\n", user, server, password)
 	return true
 }
 
@@ -30,7 +36,10 @@ func (dummy Dummy) RemoveUser3(user, server, password string) bool {
 }
 
 func main() {
-	external := jabberd.NewExternal(dummy)
+	log.SetOutput(os.Stderr)
+
+	dummy := Dummy{}
+	external := ejabberd.NewExternal(dummy)
 
 	external.Start()
 }
