@@ -41,7 +41,7 @@ func NewExternal(method interface{}) External {
 	}
 }
 
-func (e *External) Start() {
+func (e *External) Start() error {
 	input := bufio.NewReader(os.Stdin)
 	output := bufio.NewWriter(os.Stdout)
 	var (
@@ -50,13 +50,14 @@ func (e *External) Start() {
 		result  uint16
 	)
 	for {
-		binary.Read(input, binary.BigEndian, &length)
+		if err := binary.Read(input, binary.BigEndian, &length); err != nil {
+			return err
+		}
 
 		buffer := make([]byte, length)
-
-		r, _ := input.Read(buffer)
-		if r == 0 {
-			continue
+		_, err := input.Read(buffer)
+		if err != nil {
+			return err
 		}
 
 		data := strings.Split(string(buffer), ":")
